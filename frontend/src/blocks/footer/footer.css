@@ -1,0 +1,17 @@
+.footer {
+  margin: 0 0 60px;
+  max-width: 100%;
+}
+
+@media all and (max-width: 918px) {
+  .footer {
+    padding-left: 19px;
+    max-width: calc(100% - 2*19px);
+  }
+}
+
+@media all and (max-width: 767px) {
+  .footer {
+    margin-bottom: 36px;
+  }
+}

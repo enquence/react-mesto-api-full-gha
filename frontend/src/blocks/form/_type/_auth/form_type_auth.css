@@ -1,0 +1,9 @@
+.form_type_auth {
+  min-width: 358px;
+}
+
+@media all and (max-width: 400px) {
+  .form_type_auth {
+    min-width: calc(100% - 20px);
+  }
+}

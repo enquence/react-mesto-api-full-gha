@@ -1,0 +1,22 @@
+.header {
+  min-height: 74px;
+  margin: 45px auto 40px;
+  border-bottom: rgba(84, 84, 84, 0.7) 1px solid;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(104px,142px) 1fr min-content;
+  justify-items: end;
+}
+
+@media all and (max-width: 918px) {
+  .header {
+    padding-left: 27px;
+  }
+}
+
+@media all and (max-width: 767px) {
+  .header {
+    min-height: 56px;
+    margin: 28px auto 42px;
+  }
+}

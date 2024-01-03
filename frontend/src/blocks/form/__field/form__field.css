@@ -1,0 +1,13 @@
+.form__field {
+  width: 100%;
+  background-color: rgba(0,0,0,0);
+  border: none;
+  border-bottom: rgba(0, 0, 0, 0.2) 1px solid;
+  outline: none;
+  padding: 0 0 9px;
+  margin: 0 0 5px;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 400;
+  box-sizing: border-box;
+}
