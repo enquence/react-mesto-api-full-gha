@@ -66,7 +66,7 @@ function App() {
   }
 
   const handleCardLike = (card, isLikedByUser) => {
-    api.likeCard(card.id, isLikedByUser)
+    api.likeCard(card.id, isLikedByUser, localStorage.getItem('token'))
       .then(responseCard => setCards(cards.map(el => el.id === responseCard._id ? normalizeCard(responseCard) : el)))
       .catch((err) => console.log(err))
   }
@@ -75,7 +75,7 @@ function App() {
     setIsConfirmPopupOpen(true)
     confirmAction.current = () => {
       setIsLoading(true)
-      api.deleteCard(cardId)
+      api.deleteCard(cardId, localStorage.getItem('token'))
         .then(() => {
           setCards(cards.filter(card => card.id !== cardId))
           closeAllPopups()
@@ -92,8 +92,7 @@ function App() {
         if (data.token) {
           setLoggedIn(true)
           localStorage.setItem('token', data.token);
-          checkTokenLocally()
-          navigate('/', {replace: true})
+          checkTokenLocally().then(() => navigate('/', {replace: true})).catch(err => console.log(err))
         }
       })
       .catch(() => showNotificationPopup({type: 'cross', text: 'Что-то пошло не так! Попробуйте еще раз.'}))
@@ -115,17 +114,19 @@ function App() {
   const handleLogout = () => {
     if (localStorage.getItem('token')) localStorage.removeItem('token')
     setLoggedIn(false)
+    setCurrentUser({})
     setEmail(null)
     navigate('/sign-in')
   }
 
-  const checkTokenLocally = () => {
+  const checkTokenLocally = async () => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token')
       authApi.checkToken(token)
-        .then(res => {
+        .then(user => {
           setLoggedIn(true)
-          setEmail(res.data.email)
+          setCurrentUser({...currentUser, ...user})
+          setEmail(user.email)
           navigate('/', {replace: true})
         })
         .catch(err => console.log(err))
@@ -134,11 +135,13 @@ function App() {
 
   useEffect(() => {
     checkTokenLocally()
-    api.getUserInfo()
-      .then((user) => setCurrentUser({...currentUser, ...user}))
-      .then(() => api.getAllCards())
-      .then((data) => setCards(data.map(card => normalizeCard(card))))
-      .catch((err) => console.log(err))
+      .then(() => {
+        api.getUserInfo(localStorage.getItem('token'))
+          .then((user) => setCurrentUser({...currentUser, ...user}))
+          .then(() => api.getAllCards(localStorage.getItem('token')))
+          .then((data) => setCards(data.map(card => normalizeCard(card))))
+          .catch((err) => console.log(err))
+      }).catch((err) => console.log(err))
   }, [])
 
   return (
@@ -170,7 +173,7 @@ function App() {
                         onClose={closeAllPopups}
                         onUpdateUser={({name, about}) => {
                           setIsLoading(true)
-                          api.updateUserInfo({name, about})
+                          api.updateUserInfo({name, about}, localStorage.getItem('token'))
                             .then((user) => {
                               setCurrentUser({...currentUser, ...user})
                               closeAllPopups()
@@ -184,7 +187,7 @@ function App() {
                        onClose={closeAllPopups}
                        onUpdateAvatar={({avatar}) => {
                          setIsLoading(true)
-                         api.updateAvatar({avatar})
+                         api.updateAvatar({avatar}, localStorage.getItem('token'))
                            .then((user) => {
                              setCurrentUser({...currentUser, ...user})
                              closeAllPopups()
@@ -198,7 +201,7 @@ function App() {
                      onClose={closeAllPopups}
                      onAddCard={(newCard) => {
                        setIsLoading(true)
-                       api.addCard(newCard)
+                       api.addCard(newCard, localStorage.getItem('token'))
                          .then((card) => {
                            setCards([normalizeCard(card)].concat(cards))
                            closeAllPopups()

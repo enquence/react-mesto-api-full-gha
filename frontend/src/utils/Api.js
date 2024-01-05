@@ -12,49 +12,49 @@ class Api {
       })
   }
 
-  getAllCards() {
+  getAllCards(jwt) {
     return this._sendRequest(`${this._url}/cards`, {
-      method: 'GET', headers: this._headers
+      method: 'GET', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }
     })
   }
 
-  addCard({name, link}) {
+  addCard({name, link}, jwt) {
     return this._sendRequest(`${this._url}/cards`, {
-      method: 'POST', headers: this._headers, body: JSON.stringify({
+      method: 'POST', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }, body: JSON.stringify({
         name: name, link: link
       })
     })
   }
 
-  likeCard(cardId, isLiked) {
+  likeCard(cardId, isLiked, jwt) {
     return this._sendRequest(`${this._url}/cards/${cardId}/likes`, {
-      method: isLiked ? 'DELETE' : 'PUT', headers: this._headers
+      method: isLiked ? 'DELETE' : 'PUT', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }
     })
   }
 
-  deleteCard(cardId) {
+  deleteCard(cardId, jwt) {
     return this._sendRequest(`${this._url}/cards/${cardId}`, {
-      method: 'DELETE', headers: this._headers
+      method: 'DELETE', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }
     })
   }
 
-  getUserInfo() {
+  getUserInfo(jwt) {
     return this._sendRequest(`${this._url}/users/me`, {
-      method: 'GET', headers: this._headers
+      method: 'GET', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }
     })
   }
 
-  updateUserInfo({name, about}) {
+  updateUserInfo({name, about}, jwt) {
     return this._sendRequest(`${this._url}/users/me`, {
-      method: 'PATCH', headers: this._headers, body: JSON.stringify({
+      method: 'PATCH', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }, body: JSON.stringify({
         name: name, about: about
       })
     })
   }
 
-  updateAvatar({avatar}) {
+  updateAvatar({avatar}, jwt) {
     return this._sendRequest(`${this._url}/users/me/avatar`, {
-      method: 'PATCH', headers: this._headers, body: JSON.stringify({
+      method: 'PATCH', headers: { 'Authorization': `Bearer ${jwt}`, ...this._headers }, body: JSON.stringify({
         avatar: avatar
       })
     })

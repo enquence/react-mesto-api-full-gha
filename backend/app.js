@@ -28,12 +28,12 @@ mongoose.connect(`mongodb://${DB_IP}:${DB_PORT}/${DB_NAME}`)
 
 const app = express();
 
+app.use(requestLogger);
 app.use(cors);
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
