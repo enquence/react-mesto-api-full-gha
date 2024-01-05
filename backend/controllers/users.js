@@ -63,7 +63,7 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).status(StatusCodes.OK).end();
+      res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).status(StatusCodes.OK).send({ token });
     })
     .catch(next);
 };
