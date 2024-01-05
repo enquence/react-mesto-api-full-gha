@@ -92,15 +92,12 @@ class AuthApi {
 }
 
 const optionsApi = {
-  url: 'https://mesto.nomoreparties.co/v1/cohort-75',
-  headers: {
-    authorization: 'd6407735-ae7a-4c39-ac77-589083b716b5',
-    'Content-Type': 'application/json'
-  }
+  url: 'https://api.enquence.students.nomoredomainsmonster.ru',
+  headers: { 'Content-Type': 'application/json', }
 }
 const optionsAuthApi = {
-  url: 'https://auth.nomoreparties.co',
-  headers: {'Content-Type': 'application/json',}
+  url: 'https://api.enquence.students.nomoredomainsmonster.ru',
+  headers: { 'Content-Type': 'application/json', }
 }
 
 const authApi = new AuthApi(optionsAuthApi)

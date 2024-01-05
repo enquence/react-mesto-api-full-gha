@@ -4,7 +4,6 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { AuthError } = require('../utils/errors');
 
-// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET } = process.env;
   const { authorization } = req.headers;
@@ -20,5 +19,5 @@ module.exports = (req, res, next) => {
   }
 
   req.user = payload;
-  next();
+  return next();
 };

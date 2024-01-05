@@ -63,8 +63,7 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       );
-      // TODO Тесты не хотят работать через куки((
-      res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).send({ token });
+      res.cookie('jwt', token, { maxAge: 3600000, httpOnly: true }).status(StatusCodes.OK).end();
     })
     .catch(next);
 };

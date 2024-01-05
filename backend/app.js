@@ -10,7 +10,9 @@ const { errors } = require('celebrate');
 const { StatusCodes } = require('http-status-codes');
 const bodyParser = require('body-parser');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const cookieParser = require('cookie-parser');
 const auth = require('./middlewares/auth');
+const cors = require('./middlewares/cors');
 const regexPatterns = require('./utils/regex-patterns');
 
 const {
@@ -26,10 +28,18 @@ mongoose.connect(`mongodb://${DB_IP}:${DB_PORT}/${DB_NAME}`)
 
 const app = express();
 
+app.use(cors);
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use('/signin', celebrate({
   body: Joi.object().keys({

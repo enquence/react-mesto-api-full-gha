@@ -54,7 +54,6 @@ function App() {
   const showNotificationPopup = ({type, text}) => {
     setNotification({type, text})
     setIsNotificationPopupOpen(true)
-  //  window.addEventListener('keyup', handleClosePopupsOnEsc)
   }
 
   const closeAllPopups = () => {
@@ -64,7 +63,6 @@ function App() {
     setIsEditProfilePopupOpen(false)
     setIsNotificationPopupOpen(false)
     setSelectedCard(null)
-  //  window.removeEventListener('keyup', handleClosePopupsOnEsc)
   }
 
   const handleCardLike = (card, isLikedByUser) => {
@@ -75,7 +73,6 @@ function App() {
 
   const handleCardDelete = (cardId) => {
     setIsConfirmPopupOpen(true)
-//    window.addEventListener('keyup', handleClosePopupsOnEsc)
     confirmAction.current = () => {
       setIsLoading(true)
       api.deleteCard(cardId)
