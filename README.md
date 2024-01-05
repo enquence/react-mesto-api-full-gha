@@ -7,7 +7,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 158.160.23.174
+IP 158.160.23.174
 
 Frontend https://enquence.students.nomoredomainsmonster.ru/
 
