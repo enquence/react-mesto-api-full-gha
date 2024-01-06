@@ -7,13 +7,14 @@ const { celebrate, Joi } = require('celebrate');
 const helmet = require('helmet');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { errors } = require('celebrate');
-const { StatusCodes } = require('http-status-codes');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const { rateLimit } = require('express-rate-limit');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const cors = require('./middlewares/cors');
 const regexPatterns = require('./utils/regex-patterns');
+const { NotFoundError } = require("./utils/errors");
 
 const {
   PORT = 3000,
@@ -34,6 +35,12 @@ app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 1000,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+}))
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -63,7 +70,7 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use('*', (req, res) => res.status(StatusCodes.NOT_FOUND).send({ message: 'Несуществующий эндпоинт' }));
+app.use('*', (_, __, next) => next(new NotFoundError('Несуществующий эндпоинт')));
 
 app.use(errorLogger);
 app.use(errors());
