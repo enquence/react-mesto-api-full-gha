@@ -90,9 +90,8 @@ function App() {
     authApi.signIn(data)
       .then((data) => {
         if (data.token) {
-          setLoggedIn(true)
           localStorage.setItem('token', data.token);
-          checkTokenLocally().then(() => navigate('/', {replace: true})).catch(err => console.log(err))
+          checkTokenLocally()
         }
       })
       .catch(() => showNotificationPopup({type: 'cross', text: 'Что-то пошло не так! Попробуйте еще раз.'}))
@@ -103,10 +102,10 @@ function App() {
     setIsLoading(true);
     authApi.signUp(data)
       .then((res) => {
-          showNotificationPopup({type: 'ok', text: 'Вы успешно зарегистрировались!'})
-          navigate('/sign-in', {replace: true})
-          return res
-        })
+        showNotificationPopup({type: 'ok', text: 'Вы успешно зарегистрировались!'})
+        navigate('/sign-in', {replace: true})
+        return res
+      })
       .catch(() => showNotificationPopup({type: 'cross', text: 'Что-то пошло не так! Попробуйте еще раз.'}))
       .finally(() => setIsLoading(false))
   }
@@ -119,9 +118,9 @@ function App() {
     navigate('/sign-in')
   }
 
-  const checkTokenLocally = async () => {
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token')
+  const checkTokenLocally = () => {
+    const token = localStorage.getItem('token')
+    if (token) {
       authApi.checkToken(token)
         .then(user => {
           setLoggedIn(true)
@@ -134,14 +133,15 @@ function App() {
   }
 
   useEffect(() => {
+    if (currentUser?._id) {
+      api.getAllCards(localStorage.getItem('token'))
+        .then((data) => setCards(data.map(card => normalizeCard(card))))
+        .catch((err) => console.log(err))
+    }
+  }, [currentUser])
+  
+  useEffect(() => {
     checkTokenLocally()
-      .then(() => {
-        api.getUserInfo(localStorage.getItem('token'))
-          .then((user) => setCurrentUser({...currentUser, ...user}))
-          .then(() => api.getAllCards(localStorage.getItem('token')))
-          .then((data) => setCards(data.map(card => normalizeCard(card))))
-          .catch((err) => console.log(err))
-      }).catch((err) => console.log(err))
   }, [])
 
   return (
